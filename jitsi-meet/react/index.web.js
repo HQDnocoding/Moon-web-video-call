@@ -8,6 +8,7 @@ import { getJitsiMeetGlobalNS, getJitsiMeetGlobalNSConnectionTimes } from './fea
 import DialInSummaryApp from './features/invite/components/dial-in-summary/web/DialInSummaryApp';
 import PrejoinApp from './features/prejoin/components/web/PrejoinApp';
 import WhiteboardApp from './features/whiteboard/components/web/WhiteboardApp';
+import SignUp from './components/SignUp';
 
 const logger = getLogger('index.web');
 
@@ -62,10 +63,12 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 globalNS.entryPoints = {
+    SIGNUP: SignUp,
     APP: App,
     PREJOIN: PrejoinApp,
     DIALIN: DialInSummaryApp,
-    WHITEBOARD: WhiteboardApp
+    WHITEBOARD: WhiteboardApp,
+
 };
 
 globalNS.renderEntryPoint = ({
@@ -79,3 +82,8 @@ globalNS.renderEntryPoint = ({
         document.getElementById(elementId)
     );
 };
+
+// globalNS.renderEntryPoint({
+//     Component: globalNS.entryPoints.SIGNUP,
+//     elementId: 'react'
+// });

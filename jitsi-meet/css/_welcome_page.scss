@@ -351,4 +351,38 @@ body.welcome-page {
         max-width: 200px;
         margin-right: 16px;
     }
+
+
+    .register-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+    }
+    
+    .register-button {
+        background-color: #f03e3e; /* Màu xanh nổi bật */
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .register-button:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+    }
+    
+    .register-button:active {
+        background-color: #004494;
+        transform: translateY(0);
+    }
+    
 }
+
+
