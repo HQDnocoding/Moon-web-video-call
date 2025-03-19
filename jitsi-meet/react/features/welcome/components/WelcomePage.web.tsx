@@ -182,6 +182,15 @@ class WelcomePage extends AbstractWelcomePage<IProps> {
         document.body.classList.remove('welcome-page');
     }
 
+    _onLogoutClick = () => {
+        localStorage.removeItem('user');
+        localStorage.removeItem('access_token')
+    
+    
+        window.location.href = '/';
+    };
+    
+
     /**
      * Implements React's {@link Component#render()}.
      *
@@ -206,33 +215,52 @@ class WelcomePage extends AbstractWelcomePage<IProps> {
 
                 <div className="navbar">
                     <div className="navbar-container">
-                        <div className='header-watermark-container' style={{paddingBottom:30}}>
+                        <div className='header-watermark-container' style={{ paddingBottom: 30 }}>
                             <div className='welcome-watermark'>
                                 <Watermarks
                                     defaultJitsiLogoURL={DEFAULT_WELCOME_PAGE_LOGO_URL}
                                     noMargins={true} />
                             </div>
                         </div>
-                        <div className="navbar-links">
-                            <button className="login-button" onClick={() => window.location.href = '/login'}>
-                                Đăng nhập
-                            </button>
-                            <button className="register-button" onClick={() => window.location.href = '/register'}>
-                                Đăng ký
-                            </button>
-                            <div >
-                                <SettingsButton
-                                    defaultTab={SETTINGS_TABS.CALENDAR}
-                                    isDisplayedOnWelcomePage={true} />
-                                {showAdditionalToolbarContent
-                                    ? <div
-                                        className='settings-toolbar-content'
-                                        ref={this._setAdditionalToolbarContentRef} />
-                                    : null
-                                }
+                        {!localStorage.getItem('access_token') ?
+                            <div className="navbar-links">
+                                <button className="login-button" onClick={() => window.location.href = '/login'}>
+                                    Đăng nhập
+                                </button>
+                                <button className="register-button" onClick={() => window.location.href = '/register'}>
+                                    Đăng ký
+                                </button>
+                                <div >
+                                    <SettingsButton
+                                        defaultTab={SETTINGS_TABS.CALENDAR}
+                                        isDisplayedOnWelcomePage={true} />
+                                    {showAdditionalToolbarContent
+                                        ? <div
+                                            className='settings-toolbar-content'
+                                            ref={this._setAdditionalToolbarContentRef} />
+                                        : null
+                                    }
+                                </div>
                             </div>
-                        </div>
-                        
+                            :
+                            <div className="navbar-links">
+                                <button className="logout-button" onClick={this._onLogoutClick}>
+                                Đăng xuất
+                                </button>
+                                <div >
+                                    <SettingsButton
+                                        defaultTab={SETTINGS_TABS.CALENDAR}
+                                        isDisplayedOnWelcomePage={true} />
+                                    {showAdditionalToolbarContent
+                                        ? <div
+                                            className='settings-toolbar-content'
+                                            ref={this._setAdditionalToolbarContentRef} />
+                                        : null
+                                    }
+                                </div>
+                            </div>}
+
+
                     </div>
                 </div>
 

@@ -8,7 +8,8 @@ import * as dotenv from'dotenv'
 dotenv.config()
 const usernameMDB:string=process.env.USERNAME_MDB || "defaultUsername";
 const passwordMDB:string=process.env.PASSWORD_MDB || "defaultPassword";
-const uri = `mongodb+srv://${usernameMDB}:${passwordMDB}@moon.pb6ql.mongodb.net/?retryWrites=true&w=majority&appName=Moon`;
+// const uri = `mongodb+srv://${usernameMDB}:${passwordMDB}@moon.pb6ql.mongodb.net/?retryWrites=true&w=majority&appName=Moon`;
+const uri=`mongodb+srv://${usernameMDB}:${passwordMDB}@moondb.odrak.mongodb.net/?retryWrites=true&w=majority&appName=moondb`
 @Module({
   imports: [
     UsersModule,
