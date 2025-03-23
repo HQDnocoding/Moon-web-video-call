@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+import { createEndTimeFB, createRoomFB, getEndTimeFB, getRoomFB, updateEndTimeFB, updateRoomFB } from '../../../firebase/functions';
 import { createStartMutedConfigurationEvent } from '../../analytics/AnalyticsEvents';
 import { sendAnalytics } from '../../analytics/functions';
 import { IReduxState, IStore } from '../../app/types';
@@ -190,7 +192,7 @@ function _addConferenceListeners(conference: IJitsiConference, dispatch: IStore[
 
                 // Do not remove the audio track on RN. Starting with iOS 15 it will fail to unmute otherwise.
                 if ((audioMuted && trackType === MEDIA_TYPE.AUDIO && navigator.product !== 'ReactNative')
-                        || (videoMuted && trackType === MEDIA_TYPE.VIDEO)) {
+                    || (videoMuted && trackType === MEDIA_TYPE.VIDEO)) {
                     dispatch(replaceLocalTrack(track.jitsiTrack, null, conference));
                 }
             }
@@ -413,11 +415,64 @@ export function conferenceFailed(conference: IJitsiConference, error: string, ..
  *     conference: JitsiConference
  * }}
  */
+let roomInfo = '';
 export function conferenceJoined(conference: IJitsiConference) {
-    return {
-        type: CONFERENCE_JOINED,
-        conference
-    };
+    logger.info("concaconcua", 'action Conference joined 1', conference.options.name);
+    roomInfo = conference.options.name;
+
+    //tinh toan thoi gian ket thuc
+    let duration =(1000 * 15);//15 giay , thay doi trong localstorage
+    getEndTimeFB(roomInfo).then((res) => {
+        if (res.end_time === 0) {
+            let endTime= Date.now() + duration;
+            createEndTimeFB(roomInfo, endTime).then(() => {
+
+            })
+        }else if (res.end_time > 0){
+            duration = res.end_time - Date.now();
+        }
+        setTimeout(() => {
+            updateRoomFB(roomInfo,0).then(() => {
+                updateEndTimeFB(roomInfo, 0).then(() => {
+                    
+                    alert('Het thoi gian')
+                    window.location.replace("/");
+                })
+               
+            })
+        }, duration);//thong bao roi cuoc hop
+    
+    })
+    
+
+    // tinh toan so luongtham gia
+    getRoomFB(roomInfo).then((res) => {
+        console.log("concaconcua thong tin", res);
+        const maxParticipants = 2;//thay bang localstorage
+
+        const currentPaticipants = res.current_paticipants;
+        if (currentPaticipants === 0) {
+            createRoomFB(roomInfo, maxParticipants).then(() => {
+                alert("Ban da tham gia phong hop thanh cong");
+
+            });
+
+        } else if (currentPaticipants > 0) {
+            updateRoomFB(roomInfo, currentPaticipants + 1).then(() => {
+                alert("Ban da tham gia phong hop thanh cong");
+            })
+        }
+    }).catch((err) => {
+        alert(err);
+    })
+        .finally(() => {
+            return {
+                type: CONFERENCE_JOINED,
+                conference
+            };
+        })
+
+
 }
 
 /**
@@ -727,6 +782,18 @@ export function endpointMessageReceived(participant: Object, data: Object) {
  * @returns {Function}
  */
 export function endConference() {
+    logger.log('concaconcua', "ket thuc cuoc hop");
+    console.log('concaconcua', "ket thuc cuoc phong hop");
+    if (roomInfo !== '') {
+
+
+        updateRoomFB(roomInfo, 0).then(() => {
+            console.log("concaconcua roi thanh cong",);
+        }).catch((err) => {
+            console.log("concaconcua  loi", err);
+        })
+
+    }
     return async (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
         const { conference } = getConferenceState(toState(getState));
 
@@ -762,6 +829,20 @@ export function kickedOut(conference: IJitsiConference, participant: Object) {
  * @returns {Function}
  */
 export function leaveConference() {
+    logger.log('concaconcua', "roi phong hop");
+    if (roomInfo !== '') {
+        getRoomFB(roomInfo).then((res) => {
+            const currentPaticipants = res.current_paticipants > 0 ? res.current_paticipants - 1 : 0;
+            updateRoomFB(roomInfo, currentPaticipants).then(() => {
+                console.log("concaconcua roi thanh cong",);
+            }).catch((err) => {
+                console.log("concaconcua  loi", err);
+            })
+
+        }).catch((err) => {
+            console.log("concaconcua  loi", err);
+        })
+    }
     return async (dispatch: IStore['dispatch']) => dispatch(hangup(true));
 }
 
@@ -819,7 +900,7 @@ export function nonParticipantMessageReceived(id: string, json: Object) {
  * }}
  */
 export function onStartMutedPolicyChanged(
-        audioMuted: boolean, videoMuted: boolean) {
+    audioMuted: boolean, videoMuted: boolean) {
     return {
         type: SET_START_MUTED_POLICY,
         startAudioMutedPolicy: audioMuted,
@@ -927,59 +1008,59 @@ export function setStartReactionsMuted(muted: boolean, updateBackend = false) {
  * @returns {Function}
  */
 export function setPassword(
-        conference: IJitsiConference | undefined,
-        method: Function | undefined,
-        password?: string) {
+    conference: IJitsiConference | undefined,
+    method: Function | undefined,
+    password?: string) {
     return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
         if (!conference) {
             return Promise.reject();
         }
         switch (method) {
-        case conference.join: {
-            let state = getState()['features/base/conference'];
+            case conference.join: {
+                let state = getState()['features/base/conference'];
 
-            dispatch({
-                type: SET_PASSWORD,
-                conference,
-                method,
-                password
-            });
+                dispatch({
+                    type: SET_PASSWORD,
+                    conference,
+                    method,
+                    password
+                });
 
-            // Join the conference with the newly-set password.
+                // Join the conference with the newly-set password.
 
-            // Make sure that the action did set the password.
-            state = getState()['features/base/conference'];
-            if (state.password === password
+                // Make sure that the action did set the password.
+                state = getState()['features/base/conference'];
+                if (state.password === password
 
                     // Make sure that the application still wants the
                     // conference joined.
                     && !state.conference) {
-                method.call(conference, password);
-            }
-            break;
-        }
-
-        case conference.lock: {
-            const state = getState()['features/base/conference'];
-
-            if (state.conference === conference) {
-                return (
-                    method.call(conference, password)
-                        .then(() => dispatch({
-                            type: SET_PASSWORD,
-                            conference,
-                            method,
-                            password
-                        }))
-                        .catch((error: Error) => dispatch({
-                            type: SET_PASSWORD_FAILED,
-                            error
-                        }))
-                );
+                    method.call(conference, password);
+                }
+                break;
             }
 
-            return Promise.reject();
-        }
+            case conference.lock: {
+                const state = getState()['features/base/conference'];
+
+                if (state.conference === conference) {
+                    return (
+                        method.call(conference, password)
+                            .then(() => dispatch({
+                                type: SET_PASSWORD,
+                                conference,
+                                method,
+                                password
+                            }))
+                            .catch((error: Error) => dispatch({
+                                type: SET_PASSWORD_FAILED,
+                                error
+                            }))
+                    );
+                }
+
+                return Promise.reject();
+            }
         }
     };
 }
@@ -1029,7 +1110,7 @@ export function setRoom(room?: string) {
  * @returns {Function}
  */
 export function setStartMutedPolicy(
-        startAudioMuted: boolean, startVideoMuted: boolean) {
+    startAudioMuted: boolean, startVideoMuted: boolean) {
     return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
         const conference = getCurrentConference(getState());
 
