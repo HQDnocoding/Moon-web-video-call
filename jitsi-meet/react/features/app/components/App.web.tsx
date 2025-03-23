@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route,  Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import GlobalStyles from '../../base/ui/components/GlobalStyles.web';
 import JitsiThemeProvider from '../../base/ui/components/JitsiThemeProvider.web';
@@ -15,6 +15,8 @@ import '../reducers';
 import WelcomePageWeb from '../../welcome/components/WelcomePage.web';
 import RegisterPage from '../../authentication/components/web/Register';
 import LoginPage from '../../authentication/components/web/Login';
+import SubscriptionPlans from '../../pricing/SubscriptionPlans';
+import Navbar from './Navbar';
 
 
 export class App extends AbstractApp {
@@ -32,10 +34,12 @@ export class App extends AbstractApp {
                 <GlobalStyles />
                 <ChromeExtensionBanner />
                 <Router>
+                    <Navbar /> 
                     <Routes>
-                        <Route path="/" element={<WelcomePageWeb/>} />
+                        <Route path="/" element={<WelcomePageWeb />} />
                         <Route path="/register" element={<RegisterPage />} />
                         <Route path="/login" element={<LoginPage />} />
+                        <Route path='/pricing' element={<SubscriptionPlans />} />
                         {/* Render lại giao diện chính của Jitsi */}
                         <Route path="*" element={super._createMainElement(component, props)} />
                     </Routes>

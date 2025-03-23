@@ -19,6 +19,7 @@ const jwtSecret: string = process.env.JWTSECRET_MODULE || "pppppp000dd";
     signOptions: { expiresIn: '1h' }
   })],
   controllers: [UsersController],
-  providers: [UsersService, JwtStrategy]
+  providers: [UsersService, JwtStrategy],
+  exports: [UsersService],
 })
 export class UsersModule { }

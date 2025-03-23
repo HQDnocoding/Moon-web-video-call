@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from './schemas/user.schema';
@@ -43,7 +43,7 @@ export class UsersService {
   async login(email: string, password: string): Promise<{ access_token: string; user_profile:any }> {
     const user = await this.userModel.findOne({ email }).exec();
     if (!user) {
-      throw new UnauthorizedException('Email không tồn tại!');
+      throw new UnauthorizedException('Email không tồn tại!');  
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -75,4 +75,38 @@ export class UsersService {
   async remove(id: string): Promise<User | null> {
     return this.userModel.findByIdAndDelete(id).exec();
   }
+
+  async updatePaymentMethod(email: string, subscriptionId: string): Promise<void> {
+    const user = await this.userModel.findOne({ email }).exec();
+    if (!user) throw new NotFoundException(`User ${email} not found`);
+    user.subscriptionId = subscriptionId;
+    await user.save();
+  }
+  
+  async findAllWithVaultToken(): Promise<User[]> {
+    return this.userModel.find({ agreementId: { $exists: true, $ne: null } }).exec();
+  }
+
+  async calculateMonthlyAmount(email: string, month: string): Promise<string> {
+    // const usage = await this.usageModel.findOne({ userEmail: email, month }).exec();
+    const usage="10";
+    // return usage ? usage.amount.toFixed(2) : "0.00"; // Trả về "0.00" nếu không có dữ liệu
+    return usage;
+  }
+
+  async updateSubscriptionId(subscriptionId: string, newSubscriptionId: string | null): Promise<UserDocument> {
+    // Tìm user có subscriptionId hiện tại và cập nhật
+    const user = await this.userModel.findOneAndUpdate(
+      { subscriptionId }, // Điều kiện tìm user
+      { $set: { subscriptionId: newSubscriptionId } }, // Cập nhật subscriptionId thành null
+      { new: true }, // Trả về document sau khi cập nhật
+    ).exec();
+
+    if (!user) {
+      throw new NotFoundException(`User with subscription ${subscriptionId} not found`);
+    }
+
+    return user;
+  }
+  
 }
