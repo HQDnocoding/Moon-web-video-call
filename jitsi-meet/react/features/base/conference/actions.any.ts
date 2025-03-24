@@ -415,40 +415,74 @@ export function conferenceFailed(conference: IJitsiConference, error: string, ..
  *     conference: JitsiConference
  * }}
  */
+function handleBeforeUnload(event) {
+    // Cập nhật dữ liệu trong localStorage
+    updateRoomFB(roomInfo, 0).then(() => {
+        updateEndTimeFB(roomInfo, 0).then(() => {
+            // (Tùy chọn) Hiển thị thông báo xác nhận
+
+        })
+
+    })
+    event.preventDefault();
+    event.returnValue = 'chuan bi truoc khi dong tab'; // Chuẩn cho một số trình duyệt để hiển thị xác nhận
+
+
+}
+
 let roomInfo = '';
 export function conferenceJoined(conference: IJitsiConference) {
+
+    // // Thêm sự kiện beforeunload
+    // window.addEventListener('beforeunload', handleBeforeUnload);
+
     logger.info("concaconcua", 'action Conference joined 1', conference.options.name);
     roomInfo = conference.options.name;
 
     //tinh toan thoi gian ket thuc
-    let duration =(1000 * 15);//15 giay , thay doi trong localstorage
+    const storedMaxMeetingMinutes = localStorage.getItem('maxMeetingMinutes');
+    const maxMeetingMinutes = storedMaxMeetingMinutes ? parseInt(storedMaxMeetingMinutes, 10) : 1;
+    let duration = (1000 * 60 * maxMeetingMinutes);//15 giay , thay doi trong localstorage (1000 * 15)
     getEndTimeFB(roomInfo).then((res) => {
         if (res.end_time === 0) {
-            let endTime= Date.now() + duration;
+            let endTime = Date.now() + duration;
             createEndTimeFB(roomInfo, endTime).then(() => {
 
             })
-        }else if (res.end_time > 0){
+        } else if (res.end_time > 0) {
             duration = res.end_time - Date.now();
         }
-        setTimeout(() => {
-            updateRoomFB(roomInfo,0).then(() => {
+        // moi tham gia nhung da ket thuc
+        if (duration <= 0) {
+            updateRoomFB(roomInfo, 0).then(() => {
                 updateEndTimeFB(roomInfo, 0).then(() => {
-                    
+
+                    alert('Cuoc hop da ket thuc');
+                    window.location.replace("/");
+                })
+
+            })
+
+        }
+        setTimeout(() => {
+            updateRoomFB(roomInfo, 0).then(() => {
+                updateEndTimeFB(roomInfo, 0).then(() => {
+
                     alert('Het thoi gian')
                     window.location.replace("/");
                 })
-               
+
             })
         }, duration);//thong bao roi cuoc hop
-    
+
     })
-    
+
 
     // tinh toan so luongtham gia
     getRoomFB(roomInfo).then((res) => {
         console.log("concaconcua thong tin", res);
-        const maxParticipants = 2;//thay bang localstorage
+        const storedMaxParticipants = localStorage.getItem('maxParticipants');
+        const maxParticipants = storedMaxParticipants ? parseInt(storedMaxParticipants, 10) : 2;//thay bang localstorage
 
         const currentPaticipants = res.current_paticipants;
         if (currentPaticipants === 0) {

@@ -73,7 +73,7 @@ const LoginPage = () => {
             localStorage.setItem('user', JSON.stringify(userProfile));
 
             let maxMeetingMinutes = 1; // Mặc định
-            let maxParticipants = 1; // Mặc định
+            let maxParticipants = 2 // Mặc định
 
             const subscriptionId = userProfile.subscriptionId;
             console.log("sub3",subscriptionId);
