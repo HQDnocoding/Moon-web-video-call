@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { api, endpoints } from "../../../../../configs/APIs";
 
 const RegisterContainer = styled.div`
     display: flex;
@@ -32,42 +33,61 @@ const Button = styled.button`
     }
 `;
 
-const RegisterPage = () => {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+const ErrorText = styled.p`
+    color: red;
+`;
+
+const RegisterPage: React.FC = () => {
+    const [username, setUsername] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
-    const handleRegister = () => {
-        alert(`Đăng ký thành công: ${username}`);
+    const handleRegister = async () => {
+        setError(null);
+        try {
+            const response = await api.post(endpoints.register, {
+                nickname: username,
+                email,
+                password,
+            });
+
+            if (response.status === 201) {
+                alert("Đăng ký thành công!");
+                navigate("/login");
+            }
+        } catch (err: any) {
+            console.error("Lỗi đăng ký:", err);
+            setError(err.response?.data?.message || "Đăng ký thất bại, thử lại!");
+        }
     };
 
     return (
         <RegisterContainer>
             <h2>Đăng ký tài khoản</h2>
+            {error && <ErrorText>{error}</ErrorText>}
             <Input
                 type="text"
                 placeholder="Tên người dùng"
                 value={username}
-                onChange={e => setUsername(e.target.value)}
+                onChange={(e) => setUsername(e.target.value)}
             />
             <Input
                 type="email"
                 placeholder="Email"
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
             />
             <Input
                 type="password"
                 placeholder="Mật khẩu"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
             />
             <Button onClick={handleRegister}>Đăng ký</Button>
-            <p>
-                Or
-            </p>
-            <a onClick={() => navigate('/login')} style={{ fontWeight:700,fontSize:20}}>
+            <p>Or</p>
+            <a onClick={() => navigate("/login")} style={{ fontWeight: 700, fontSize: 20, cursor: "pointer" }}>
                 Đăng nhập
             </a>
         </RegisterContainer>

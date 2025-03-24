@@ -3,20 +3,29 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { PayPalService } from './paypal/paypal.service';
+import { PaypalModule } from './paypal/paypal.module';
 import * as dotenv from'dotenv'
+import {  PaymentsCronService } from './paypal/payments.cron';
+import { ScheduleModule } from '@nestjs/schedule';
+import { ConfigModule } from '@nestjs/config';
 
 dotenv.config()
 const usernameMDB:string=process.env.USERNAME_MDB || "defaultUsername";
 const passwordMDB:string=process.env.PASSWORD_MDB || "defaultPassword";
-const uri = `mongodb+srv://${usernameMDB}:${passwordMDB}@moon.pb6ql.mongodb.net/?retryWrites=true&w=majority&appName=Moon`;
+// const uri = `mongodb+srv://${usernameMDB}:${passwordMDB}@moon.pb6ql.mongodb.net/?retryWrites=true&w=majority&appName=Moon`;
+const uri=`mongodb+srv://${usernameMDB}:${passwordMDB}@moondb.odrak.mongodb.net/?retryWrites=true&w=majority&appName=moondb`
 @Module({
-  imports: [
+  imports: [  
     UsersModule,
+    PaypalModule,
+    ConfigModule.forRoot(),
     MongooseModule.forRoot(uri,{
       dbName:"moondb"
-    })
+    }),
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, PayPalService,PaymentsCronService],
 })
 export class AppModule {}

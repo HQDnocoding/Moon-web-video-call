@@ -361,7 +361,7 @@ body.welcome-page {
     }
     
     .register-button {
-        background-color: #f03e3e; /* Màu xanh nổi bật */
+        background-color: #0056b3; /* Màu xanh nổi bật */
         color: white;
         font-size: 18px;
         font-weight: bold;
@@ -381,6 +381,83 @@ body.welcome-page {
     .register-button:active {
         background-color: #004494;
         transform: translateY(0);
+    }
+    
+
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: #1a202c;
+        color: white;
+        padding: 1rem 2rem;
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .navbar-container {
+        display: flex;
+        width: 100%;
+        max-width: 1200px;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .navbar-links {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+    
+    /* =======================
+       🔘 Button Style
+       ======================= */
+       .navbar-links button {
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: background 0.3s ease-in-out;
+    }
+    
+    /* Định dạng nút Đăng nhập */
+    .navbar-links .login-button {
+        background-color: #3182ce;
+        color: white;
+    }
+    
+    .navbar-links .login-button:hover {
+        background-color: #2b6cb0;
+        transform: translateY(-2px)
+    
+    }
+    
+    /* Định dạng nút Đăng ký */
+    .navbar-links .register-button {
+        background-color: #38a169;
+        color: white;
+    }
+    
+    .navbar-links .register-button:hover {
+        background-color: #2f855a;
+        transform: translateY(-2px)
+    
+    }
+
+
+    .navbar-links .logout-button {
+        background-color: #38a169;
+        color: white;
+    }
+    
+    .navbar-links .logout-button:hover {
+        background-color: #f03e3e;
+        transform: translateY(-2px)
+    
     }
     
 }

@@ -72,6 +72,7 @@ interface IState {
     roomNameInputAnimation?: any;
     roomPlaceholder: string;
     updateTimeoutId?: number;
+    user: { nickname: string } | null; 
 }
 
 /**
@@ -293,6 +294,6 @@ export function _mapStateToProps(state: IReduxState) {
         _moderatedRoomServiceUrl: state['features/base/config'].moderatedRoomServiceUrl,
         _recentListEnabled: isRecentListEnabled(),
         _room: state['features/base/conference'].room ?? '',
-        _settings: state['features/base/settings']
+        _settings: state['features/base/settings'],
     };
 }
