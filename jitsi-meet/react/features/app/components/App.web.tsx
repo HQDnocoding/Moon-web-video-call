@@ -34,7 +34,7 @@ export class App extends AbstractApp {
                 <GlobalStyles />
                 <ChromeExtensionBanner />
                 <Router>
-                    <Navbar /> 
+                    
                     <Routes>
                         <Route path="/" element={<WelcomePageWeb />} />
                         <Route path="/register" element={<RegisterPage />} />

@@ -29,11 +29,11 @@ const Navbar = () => {
     return (
         <div className="navbar">
             <div className="navbar-container">
-                <div style={{ paddingTop: 30 }}>
-                    <div className="welcome-watermark">
-                        <Watermarks noMargins={true} />
-                    </div>
+
+                <div >
+                    <Watermarks />
                 </div>
+
                 <div className="navbar-links">
                     <h3 style={{ color: "white" }}>
                         Email {JSON.parse(localStorage.getItem("user") || "{}").email || ""}

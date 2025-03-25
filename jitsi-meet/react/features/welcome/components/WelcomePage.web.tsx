@@ -12,6 +12,7 @@ import SettingsButton from '../../settings/components/web/SettingsButton';
 import { SETTINGS_TABS } from '../../settings/constants';
 import { AbstractWelcomePage, IProps, _mapStateToProps } from './AbstractWelcomePage';
 import Tabs from './Tabs';
+import Navbar from '../../app/components/Navbar';
 
 export const ROOM_NAME_VALIDATE_PATTERN_STR = '^[^?&:\u0022\u0027%#]+$';
 
@@ -105,6 +106,7 @@ class WelcomePage extends AbstractWelcomePage<IProps> {
 
         return (
             <div className={`welcome ${contentClassName} ${footerClassName}`} id="welcome_page">
+                <Navbar />
                 <div className="header">
                     <div className="header-image" />
                     <div className="header-container">
