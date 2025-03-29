@@ -463,7 +463,6 @@ const Prejoin = ({
                     data-testid='prejoin.errorMessage'>{t('prejoin.errorMissingName')}</div>}
 
                 <div className={classes.dropdownContainer}>
-                    <div><h1>Concaconcua</h1></div>
                     <Popover
                         content={hasExtraJoinButtons && <div className={classes.dropdownButtons}>
                             {extraButtonsToRender.map(({ key, ...rest }) => (
