@@ -415,20 +415,7 @@ export function conferenceFailed(conference: IJitsiConference, error: string, ..
  *     conference: JitsiConference
  * }}
  */
-function handleBeforeUnload(event) {
-    // Cập nhật dữ liệu trong localStorage
-    updateRoomFB(roomInfo, 0).then(() => {
-        updateEndTimeFB(roomInfo, 0).then(() => {
-            // (Tùy chọn) Hiển thị thông báo xác nhận
 
-        })
-
-    })
-    event.preventDefault();
-    event.returnValue = 'chuan bi truoc khi dong tab'; // Chuẩn cho một số trình duyệt để hiển thị xác nhận
-
-
-}
 
 let roomInfo = '';
 export function conferenceJoined(conference: IJitsiConference) {
@@ -499,12 +486,12 @@ export function conferenceJoined(conference: IJitsiConference) {
     }).catch((err) => {
         alert(err);
     })
-        .finally(() => {
-            return {
-                type: CONFERENCE_JOINED,
-                conference
-            };
-        })
+
+    return {
+        type: CONFERENCE_JOINED,
+        conference
+    };
+
 
 
 }
@@ -873,6 +860,12 @@ export function leaveConference() {
                 console.log("concaconcua  loi", err);
             })
 
+            //neu khong con ai trong phong
+            if (currentPaticipants == 0) {
+                updateEndTimeFB(roomInfo, 0).then(() => {
+                    console.log("concaconcua da reset lai thoi gian",);
+                })
+            }
         }).catch((err) => {
             console.log("concaconcua  loi", err);
         })

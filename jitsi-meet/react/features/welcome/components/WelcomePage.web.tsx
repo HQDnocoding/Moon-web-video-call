@@ -210,12 +210,26 @@ class WelcomePage extends AbstractWelcomePage<IProps> {
     }
 
     // Giữ nguyên các phương thức khác như _onRoomChange, _renderFooter, v.v.
-    _onRoomChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const specialCharacters = ['?', '&', ':', '\'', '"', '%', '#', '.'];
-        this._titleHasNotAllowCharacter = specialCharacters.some(char => event.target.value.includes(char));
-        super._onRoomChange(event.target.value);
-    }
+    // _onRoomChange(event: React.ChangeEvent<HTMLInputElement>) {
+        //     const specialCharacters = ['?', '&', ':', '\'', '"', '%', '#', '.'];
+        //     this._titleHasNotAllowCharacter = specialCharacters.some(char => event.target.value.includes(char));
+        //     super._onRoomChange(event.target.value);
+        // }
 
+    // ================dong nay bi loi , t sua lai cho dung==================
+    override _onRoomChange(event: React.ChangeEvent<HTMLInputElement> | string) {
+        // If event is a string, use it directly; otherwise, extract value from the event
+        const value = typeof event === 'string' ? event : event.target.value;
+        const specialCharacters = ['?', '&', ':', '\'', '"', '%', '#', '.'];
+        this._titleHasNotAllowCharacter = specialCharacters.some(char => value.includes(char));
+        
+        // Call the parent method with the string value
+        if (typeof event !== 'string') {
+            super._onRoomChange(value);
+        } else {
+            super._onRoomChange(event);
+        }
+    }
     _renderFooter() {
         // Giữ nguyên code gốc
     }
@@ -223,8 +237,8 @@ class WelcomePage extends AbstractWelcomePage<IProps> {
     _renderTabs() {
         // Giữ nguyên code gốc
     }
-
-    _doRenderInsecureRoomNameWarning() {
+    //===========cho nay t them ke thua, do bij loi===================
+    override _doRenderInsecureRoomNameWarning() {
         return (
             <div className="insecure-room-name-warning">
                 <Icon src={IconWarning} />

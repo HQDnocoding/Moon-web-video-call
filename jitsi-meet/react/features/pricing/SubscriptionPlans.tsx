@@ -176,7 +176,11 @@ interface Plan {
   price: string;
   features: string[];
 }
-
+//==Duc them cai nay , do chay make bi loi=====
+interface Link {
+  rel: string;
+  href: string;
+}
 const SubscriptionPlans = () => {
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [subscriptionId, setSubscriptionId] = useState("");
@@ -235,7 +239,7 @@ const SubscriptionPlans = () => {
       localStorage.setItem("user", JSON.stringify(updatedUser));
       setUser(updatedUser);
 
-      const approvalUrl = links.find(link => link.rel === "approve").href;
+      const approvalUrl = links.find((link:Link) => link.rel === "approve").href;
       window.open(approvalUrl, "_blank");
 
       const checkSubscriptionStatus = async () => {

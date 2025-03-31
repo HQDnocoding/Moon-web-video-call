@@ -97,6 +97,7 @@ export class AbstractWelcomePage<P extends IProps> extends Component<P, IState> 
      * updating the generated room name.
      */
     override state: IState = {
+        user: null,
         animateTimeoutId: undefined,
         generatedRoomName: '',
         generateRoomNames: undefined,

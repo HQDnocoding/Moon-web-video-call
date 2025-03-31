@@ -252,35 +252,42 @@ const Prejoin = ({
 
 
     // bien lay ten phong
-    const roomInfo = useSelector(state => state['features/base/conference'].room);
+    const roomInfo = useSelector((state: IReduxState) => state['features/base/conference'].room);
     const onJoinButtonClick = async () => {
-        getRoomFB(roomInfo).then((res) => {
-            console.log("concaconcua thong tin", res);
-            const maxParticipants = res.max_participants;
-
-            const currentPaticipants = res.current_paticipants;
-            if (currentPaticipants < maxParticipants) {
-                console.log("concaconcua du dieu kien vao phong", res);
-                console.log("so nguoi trong phong [", roomInfo, "] hien tai :", currentPaticipants);
-
-                if (showErrorOnJoin) {
-                    dispatch(openDisplayNamePrompt({
-                        onPostSubmit: joinConference,
-                        validateInput: hasDisplayName
-                    }));
-
-                    return;
+        const roomName = roomInfo ?? ""; 
+        if(roomName) {
+            getRoomFB(roomName).then((res) => {
+                console.log("concaconcua thong tin", res);
+                const maxParticipants = res.max_participants;
+    
+                const currentPaticipants = res.current_paticipants;
+                if (currentPaticipants < maxParticipants) {
+                    console.log("concaconcua du dieu kien vao phong", res);
+                    console.log("so nguoi trong phong [", roomName, "] hien tai :", currentPaticipants);
+    
+                    if (showErrorOnJoin) {
+                        dispatch(openDisplayNamePrompt({
+                            onPostSubmit: joinConference,
+                            validateInput: hasDisplayName
+                        }));
+    
+                        return;
+                    }
+    
+                    logger.info('Prejoin join button clicked.');
+    
+                    joinConference();
+                } else {
+                    alert("Phong khong tham gia duoc");
                 }
-
-                logger.info('Prejoin join button clicked.');
-
-                joinConference();
-            } else {
-                alert("Phong khong tham gia duoc");
-            }
-        }).catch((err) => {
-            alert(err);
-        });
+            }).catch((err) => {
+                alert(err);
+            });
+        }else {
+            console.log("concaconcua-",roomInfo,"-",roomName);
+            alert("Loi khoi tao phong");
+        }
+        
 
 
     };
