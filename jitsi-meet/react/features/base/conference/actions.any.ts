@@ -809,7 +809,11 @@ export function endConference() {
 
 
         updateRoomFB(roomInfo, 0).then(() => {
-            console.log("concaconcua roi thanh cong",);
+            updateEndTimeFB(roomInfo, 0).then(() => {
+
+               
+                console.log("concaconcua ket thuc thanh cong",);
+            })
         }).catch((err) => {
             console.log("concaconcua  loi", err);
         })

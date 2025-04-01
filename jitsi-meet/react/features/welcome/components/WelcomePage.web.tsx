@@ -176,7 +176,7 @@ class WelcomePage extends AbstractWelcomePage<IProps> {
                     </div>
                 </div>
 
-                <div className="welcome-cards-container">
+                {/* <div className="welcome-cards-container">
                     <div className="welcome-card-column">
                         <div className="welcome-tabs welcome-card welcome-card--blue">
                             {this._renderTabs()}
@@ -189,7 +189,7 @@ class WelcomePage extends AbstractWelcomePage<IProps> {
                         <div className="welcome-page-content" ref={this._setAdditionalContentRef} />
                     ) : null}
                 </div>
-                {DISPLAY_WELCOME_FOOTER && this._renderFooter()}
+                {DISPLAY_WELCOME_FOOTER && this._renderFooter()} */}
             </div>
         );
     }

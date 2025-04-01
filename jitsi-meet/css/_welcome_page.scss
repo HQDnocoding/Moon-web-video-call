@@ -22,6 +22,7 @@ body.welcome-page {
         background-color: #131519;
         overflow: hidden;
         position: relative;
+        height: 100vh;
 
         .header-container {
             display: $welcomePageHeaderContainerDisplay;
