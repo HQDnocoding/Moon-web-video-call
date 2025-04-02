@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import axios from "axios";
 import * as dotenv from 'dotenv';
+import { BASE_URL } from "../../../configs/APIs";
 
 
 
@@ -13,7 +14,7 @@ const PayPalButton = () => {
 
     const createOrder = async () => {
         try {
-            const response = await axios.post("http://localhost:3000/paypal/create-order", {
+            const response = await axios.post(`${BASE_URL}/paypal/create-order`, {
                 amount: "9.99", // Giá gói subscription
             });
             setOrderId(response.data.id);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { BASE_URL } from "../../../configs/APIs";
 
 // Styled Components (giữ nguyên các style cũ và thêm mới)
 const Container = styled.div`
@@ -200,7 +201,7 @@ const SubscriptionPlans = () => {
 
       try {
 
-        const response = await axios.get(`${apiUrl}/paypal/subscription-status/${user.subscriptionId}`);
+        const response = await axios.get(`${BASE_URL}/paypal/subscription-status/${user.subscriptionId}`);
         setSubscriptionStatus(response.data.status);
         setSubscriptionId(user.subscriptionId);
 

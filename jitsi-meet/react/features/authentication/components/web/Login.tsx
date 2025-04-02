@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { api, endpoints } from '../../../../../configs/APIs';
+import { api, BASE_URL, endpoints } from '../../../../../configs/APIs';
 import axios from 'axios';
 import { plans } from '../../../pricing/SubscriptionPlans';
 
@@ -50,7 +50,6 @@ const ErrorText = styled.p`
 
 const LoginPage = () => {
 
-    const apiUrl = "https://localhost:3000";
 
 
     const [email, setEmail] = useState('');
@@ -81,7 +80,7 @@ const LoginPage = () => {
                 
                 try {
                     // Gọi API để lấy thông tin subscription
-                    const subResponse = await axios.get(`${apiUrl}/paypal/subscription-status/${subscriptionId}`);
+                    const subResponse = await axios.get(`${BASE_URL}/paypal/subscription-status/${subscriptionId}`);
                     maxMeetingMinutes=10;
 
                     const planId = subResponse.data.plan_id; // Lấy plan_id từ subscription
