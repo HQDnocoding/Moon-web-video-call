@@ -15,7 +15,7 @@ const usernameMDB:string=process.env.USERNAME_MDB || "admin";
 const passwordMDB:string=process.env.PASSWORD_MDB || "123";
 // const uri = `mongodb+srv://${usernameMDB}:${passwordMDB}@moon.pb6ql.mongodb.net/?retryWrites=true&w=majority&appName=Moon`;
 // const uri=`mongodb+srv://${usernameMDB}:${passwordMDB}@moondb.odrak.mongodb.net/?retryWrites=true&w=majority&appName=moondb`
-const uri = `mongodb://${usernameMDB}:${passwordMDB}@10.0.139.133:27017,10.0.154.221:27017,10.0.169.246:27017/moondb?replicaSet=rs0`;
+const uri = `mongodb://${usernameMDB}:${passwordMDB}@10.0.129.33:27017,10.0.145.51:27017,10.0.163.248:27017/moondb?replicaSet=rs0`;
 @Module({
   imports: [  
     UsersModule,
