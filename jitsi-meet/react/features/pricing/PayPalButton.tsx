@@ -26,7 +26,7 @@ const PayPalButton = () => {
 
     const captureOrder = async (data: any) => {
         try {
-            const response = await axios.post(`http://localhost:3000/paypal/capture-order/${data.orderID}`);
+            const response = await axios.post(`${BASE_URL}/paypal/capture-order/${data.orderID}`);
             alert("Thanh toán thành công!");
         } catch (error) {
             console.error("Error capturing order", error);

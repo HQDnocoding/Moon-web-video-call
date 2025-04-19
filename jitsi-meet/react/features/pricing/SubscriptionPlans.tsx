@@ -229,7 +229,7 @@ const SubscriptionPlans = () => {
   // Gọi API tạo Subscription
   const handleCreateSubscription = async (planId: string) => {
     try {
-      const response = await axios.post(`${apiUrl}/paypal/create-subscription`, {
+      const response = await axios.post(`${BASE_URL}/paypal/create-subscription`, {
         email: user.email,
         planId
       });
@@ -245,7 +245,7 @@ const SubscriptionPlans = () => {
 
       const checkSubscriptionStatus = async () => {
         try {
-          const subResponse = await axios.get(`${apiUrl}/paypal/subscription-status/${id}`);
+          const subResponse = await axios.get(`${BASE_URL}/paypal/subscription-status/${id}`);
           if (subResponse.data.status === "ACTIVE") {
             setSubscriptionStatus("ACTIVE");
             setNextBillingTime(subResponse.data.billing_info?.next_billing_time);
@@ -274,7 +274,7 @@ const SubscriptionPlans = () => {
     if (!isConfirmed) return; // Nếu người dùng chọn "Cancel", thoát hàm
 
     try {
-      await axios.post(`${apiUrl}/paypal/cancel-subscription`, { subscriptionId });
+      await axios.post(`${BASE_URL}/paypal/cancel-subscription`, { subscriptionId });
       // Cập nhật trạng thái
       setSubscriptionStatus("CANCELLED");
       setSelectedPlan(null);
