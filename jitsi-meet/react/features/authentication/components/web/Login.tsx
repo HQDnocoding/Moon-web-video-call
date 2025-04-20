@@ -97,8 +97,8 @@ const LoginPage = () => {
 
                         const minutesMatch = subscribedPlan.features[1].match(/(\d+)/); // Lấy số từ "X phút họp"
                         const participantsMatch = subscribedPlan.features[0].match(/(\d+)/); // Lấy số từ "X thành viên tham gia tối đa"
-                        maxMeetingMinutes = minutesMatch ? parseInt(minutesMatch[0], 10) : 1;
-                        maxParticipants = participantsMatch ? parseInt(participantsMatch[0], 10) : 1;
+                        maxMeetingMinutes = minutesMatch ? parseInt(minutesMatch[1], 10) : 1;
+                        maxParticipants = participantsMatch ? parseInt(participantsMatch[1], 10) : 1;
                     } else {
 
                         console.log("No matching plan found for plan_id:", planId);
