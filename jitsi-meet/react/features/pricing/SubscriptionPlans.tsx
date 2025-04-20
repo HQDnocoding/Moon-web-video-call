@@ -182,6 +182,22 @@ interface Link {
   rel: string;
   href: string;
 }
+function getLimitsByPlanId(planId: string) {
+  const plan = plans.find(p => p.id === planId);
+  if (!plan) {
+    throw new Error(`Plan with ID ${planId} not found`);
+  }
+
+  const features = plan.features || [];
+
+  const participantsMatch = features[0]?.match(/(\d+)/);
+  const minutesMatch = features[1]?.match(/(\d+)/);
+
+  const maxParticipants = participantsMatch ? parseInt(participantsMatch[1], 10) : 1;
+  const maxMinutes = minutesMatch ? parseInt(minutesMatch[1], 10) : 1;
+
+  return { maxParticipants, maxMinutes };
+}
 const SubscriptionPlans = () => {
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [subscriptionId, setSubscriptionId] = useState("");
@@ -240,7 +256,7 @@ const SubscriptionPlans = () => {
       localStorage.setItem("user", JSON.stringify(updatedUser));
       setUser(updatedUser);
 
-      const approvalUrl = links.find((link:Link) => link.rel === "approve").href;
+      const approvalUrl = links.find((link: Link) => link.rel === "approve").href;
       window.open(approvalUrl, "_blank");
 
       const checkSubscriptionStatus = async () => {
@@ -259,6 +275,11 @@ const SubscriptionPlans = () => {
       };
 
       setTimeout(checkSubscriptionStatus, 5000);
+      const { maxParticipants, maxMinutes } = getLimitsByPlanId(planId);
+      // Lưu vào localStorage
+      localStorage.setItem('maxMeetingMinutes', maxMinutes.toString());
+      localStorage.setItem('maxParticipants', maxParticipants.toString());
+
     } catch (error) {
       console.error("Lỗi khi tạo Subscription:", error);
       alert("Có lỗi xảy ra khi tạo Subscription!");
@@ -286,11 +307,15 @@ const SubscriptionPlans = () => {
       localStorage.setItem("user", JSON.stringify(updatedUser));
       setUser(updatedUser);
 
+      localStorage.setItem('maxMeetingMinutes', "1");
+      localStorage.setItem('maxParticipants', "2");
       alert("Đã hủy subscription thành công!");
     } catch (error) {
       console.error("Lỗi khi hủy subscription:", error);
       alert("Có lỗi khi hủy subscription!");
     }
+
+
   };
 
   if (isLoading) {
